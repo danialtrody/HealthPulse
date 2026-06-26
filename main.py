@@ -9,3 +9,4 @@ services = {
 
 results = list(check_all_services(services))
 generate_report(results)
+
