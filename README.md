@@ -47,6 +47,7 @@ main.py  →  checker.py  →  HTTP request to API
 | **Locust** | Load testing — simulating concurrent users against the API |
 | **Prometheus** | Scraping and storing time-series metrics from the app |
 | **Grafana** | Building a live dashboard to visualize Prometheus data |
+| **Docker** | Containerizing the app and orchestrating the full stack with Docker Compose |
 | **GitHub Actions** | CI/CD — running the test suite automatically on every push |
 | **Git** | Version control |
 
@@ -70,6 +71,8 @@ HealthPulse/
 │   └── test_reporter.py        # Tests: all healthy, all down, mixed scenarios
 ├── locustfile.py               # Load test configuration
 ├── main.py                     # Entry point — runs the monitor loop
+├── Dockerfile                  # Container image definition
+├── docker-compose.yml          # Full stack: app + Prometheus + Grafana
 └── requirements.txt
 ```
 
@@ -125,7 +128,37 @@ locust -f locustfile.py
 ./prometheus --config.file=prometheus.yml
 ```
 
-## Running the Full Stack Locally
+## Running with Docker
+
+The easiest way to run the full stack (app + Prometheus + Grafana) is with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This starts three containers:
+
+| Service | URL |
+|---|---|
+| HealthPulse metrics | `http://localhost:8000` |
+| Prometheus | `http://localhost:9090` |
+| Grafana | `http://localhost:3000` (admin / admin) |
+
+To stop and remove the containers:
+
+```bash
+docker compose down
+```
+
+To rebuild the image after code changes:
+
+```bash
+docker compose up --build
+```
+
+---
+
+## Running the Full Stack Locally (without Docker)
 
 1. Start the app: `python main.py` — this launches the metrics server on `:8000`
 2. Start Prometheus — configure it to scrape `localhost:8000`
